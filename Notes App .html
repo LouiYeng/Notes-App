@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notes App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: #f4f4f4;
+    }
+    h1 {
+      margin-top: 20px;
+    }
+    #note-input {
+      width: 80%;
+      margin: 20px 0;
+    }
+    textarea {
+      width: 100%;
+      height: 100px;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    #notes {
+      width: 80%;
+      margin-top: 20px;
+    }
+    .note {
+      background: white;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .note button {
+      background-color: #dc3545;
+      margin-top: 10px;
+    }
+    .note button:hover {
+      background-color: #a71d2a;
+    }
+  </style>
+</head>
+<body>
+  <h1>Notes App</h1>
+  <div id="note-input">
+    <textarea id="note-text" placeholder="Write your note here..."></textarea>
+    <button onclick="addNote()">Add Note</button>
+  </div>
+  <div id="notes"></div>
+
+  <script>
+    const notesContainer = document.getElementById('notes');
+
+    // Load notes from local storage
+    function loadNotes() {
+      const notes = JSON.parse(localStorage.getItem('notes')) || [];
+      notesContainer.innerHTML = '';
+      notes.forEach((note, index) => {
+        const noteElement = document.createElement('div');
+        noteElement.className = 'note';
+        noteElement.innerHTML = `
+          <p>${note}</p>
+          <button onclick="deleteNote(${index})">Delete</button>
+        `;
+        notesContainer.appendChild(noteElement);
+      });
+    }
+
+    // Add a new note
+    function addNote() {
+      const noteText = document.getElementById('note-text').value;
+      if (noteText.trim() === '') return;
+      const notes = JSON.parse(localStorage.getItem('notes')) || [];
+      notes.push(noteText);
+      localStorage.setItem('notes', JSON.stringify(notes));
+      document.getElementById('note-text').value = '';
+      loadNotes();
+    }
+
+    // Delete a note
+    function deleteNote(index) {
+      const notes = JSON.parse(localStorage.getItem('notes')) || [];
+      notes.splice(index, 1);
+      localStorage.setItem('notes', JSON.stringify(notes));
+      loadNotes();
+    }
+
+    // Initialize the app
+    loadNotes();
+  </script>
+</body>
+</html>
